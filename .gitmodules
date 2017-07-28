@@ -1,0 +1,6 @@
+[submodule "py-etd"]
+	path = py-etd
+	url = git@github.com:edushare-at/py-etd.git
+[submodule "dscripts"]
+	path = dscripts
+	url = git@github.com:identinetics/dscripts.git
