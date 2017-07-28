@@ -1,10 +1,5 @@
 pipeline {
     agent any
-    environment {
-        http_proxy='http://proxy.lfrz.at:8080'
-        https_proxy='http://proxy.lfrz.at:8080'
-        no_proxy='127.0.0.1,localhost,*.vie01.local'
-        }
     stages {
         stage('ETD: get remote repo') {
             steps {
