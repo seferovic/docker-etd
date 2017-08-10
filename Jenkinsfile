@@ -67,7 +67,7 @@ pipeline {
                 '''
             }
         }
-        stage('Test ETL') {
+        stage('Test ETD') {
             steps {
                 sh '''
                 echo DATABASE_PASSWORDS=ph08:secret,postgres:secret > passwords
@@ -95,6 +95,7 @@ pipeline {
                 '''
             }
         }
+        /* no push to registry: tests will run off local images
         stage('Push to Registry') {
             steps {
                 sh '''
@@ -102,6 +103,7 @@ pipeline {
                 '''
             }
         }
+        */
     }
     post {
         always {
