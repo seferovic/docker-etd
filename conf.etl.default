@@ -7,6 +7,7 @@ main() {
     check_version $configlib_version
     # do_not_build $@ # uncomment this line to pull/load image
     init_sudo
+    _set_volume_root
     _set_image_and_container_name
     _set_users
     _set_buildargs
@@ -14,9 +15,19 @@ main() {
 }
 
 
+_set_volume_root() {
+    # container volumes mounted to host paths, or symlinks to docker volumes
+    DOCKERVOL_SHORT=${HOME}/dv
+    if [[ "$TRAVIS" == "true" ]] || [[ ! -z ${JENKINS_HOME+x} ]]; then
+        DOCKERVOL_SHORT='/tmp/dv'
+    fi
+    mkdir -p $DOCKERVOL_SHORT $DOCKERLOG_SHORT
+}
+
+
 _set_image_and_container_name() {
     IMGID='44'
-    PROJSHORT='etl'
+    PROJSHORT='etd'
     export IMAGENAME="idn/${PROJSHORT}${IMGID}"
     export CONTAINERNAME="${IMGID}$PROJSHORT"
     export DOCKER_REGISTRY=''  # empty for docker.io
@@ -27,36 +38,34 @@ _set_image_and_container_name() {
 
 
 _set_users() {
-    export START_AS_ROOT=      # 'True' (e.g. for apache to fall back to www user)
+    export START_AS_ROOT=      # 'True'
 }
 
 
 _set_buildargs() {
-    BUILD_IP=$(ip address ls docker0 | grep -w inet | cut -d ' ' -f6 \
-               | cut -d/ -f1)
+    BUILD_IP=$(ip address ls docker0 | grep -w inet | cut -d ' ' -f6 | cut -d/ -f1)
     export BUILDARGS="--build-arg=BUILD_IP=$BUILD_IP"
 }
 
 
 _set_run_args() {
-    export ENVSETTINGS="
-    --env=ORACLE_USER=addme \
-    --env=ORACLE_HOST=172.18.77.3 \
-    --env=ORACLE_PORT=1521 \
-    --env=TWO_TASK=//172.18.77.3:1521/listener \
-    --env=LDAP_URI=ldap://16openldap:8389                   \
-    --env=LDAP_BIND_DN=cn=admin,o=BMUKK                     \
-    --env=LDAP_BASE_DN=o=BMUKK                              \
-    --env=LDAP_USER_OU=ou=user                              \
-    --env=ETL_SLEEPTIME=1                                   \
-    --env=DATABASE_INSTANCES=ph08:PH08.brz,ph10:PH10.brz,ph15:PH15.brz \
-    "
+    export ENVSETTINGS=""
+#    --env=ORACLE_USER=addme \
+#    --env=ORACLE_HOST=172.18.77.3 \
+#    --env=ORACLE_PORT=1521 \
+#    --env=TWO_TASK=//172.18.77.3:1521/listener \
+#    --env=LDAP_URI=ldap://16openldap:8389                   \
+#    --env=LDAP_BIND_DN=cn=admin,o=BMUKK                     \
+#    --env=LDAP_BASE_DN=o=BMUKK                              \
+#    --env=LDAP_USER_OU=ou=user                              \
+#    --env=ETL_SLEEPTIME=1                                   \
+#    --env=DATABASE_INSTANCES=ph08:PH08.brz,ph10:PH10.brz,ph15:PH15.brz \
     export STARTCMD='/bin/bash'  # unset or blank to use image default
 }
 
 
 create_intercontainer_network() {
-    export NETWORKSETTINGS="--link 16openldap --link test-postgres"
+    export NETWORKSETTINGS="--link 16openldap"
 }
 
 
@@ -64,6 +73,9 @@ setup_vol_mapping() {
     mode=$1  # create (used by run.sh)/list (used by manage.sh)
     VOLLIST=''
     VOLMAPPING="-v $PWD/passwords:/etc/passwords"
+    map_docker_volume $mode "${CONTAINERNAME}.dataout" '/opt/data/out/PH08' 'Z' $DOCKERVOL_SHORT
+    map_docker_volume $mode "${CONTAINERNAME}.optetc" '/opt/etc/' 'Z' $DOCKERVOL_SHORT
+
 }
 
 
