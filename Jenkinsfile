@@ -4,7 +4,7 @@ pipeline {
         stage('ETD: get remote repo') {
             steps {
                 sh '''
-                printenv
+                printenv | grep proxy sort
                 echo 'hard coding git branch - TODO: move this to the jenkins git plugin'
                 git checkout master
                 echo 'pulling updates'
