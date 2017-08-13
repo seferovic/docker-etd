@@ -20,7 +20,7 @@ RUN yum -y update \
  && pip3 install ldap3 \
  && yum clean all
 
-COPY py-dump-ph/requirements.txt /tmp/
+COPY py-etd/requirements.txt /tmp/
 RUN pip3 install -r /tmp/requirements.txt
 RUN rm /tmp/requirements.txt
 
@@ -30,11 +30,12 @@ COPY startup.py /bin/startup
 RUN chmod a+x /bin/startup
 RUN chmod a+x /opt/bin/*.py
 
-COPY secret/sync.conf /opt/etc/
+COPY secret/etd.conf /opt/etc/
 COPY secret/certificates.pem /opt/etc/
 
-VOLUME /var/data
+VOLUME /opt/data/out/PH08
 VOLUME /opt/etc
 
+ 
 #ENTRYPOINT [ "/bin/startup" ]
 CMD [ "/bin/startup" ]
