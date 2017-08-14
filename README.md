@@ -3,18 +3,29 @@ edu.ldap ETD Component
 
 ## Configuration
 
-One ETD container needs to be configured per AD-instance, but all may run from the same image.
+(Currently) one ETD image needs to be built per AD-instance. (To be refactored)
 Each instance requires a separate conf.sh and etd.conf.
 
-conf.sh is used for dev/test, not for openshift. 
-
 ### conf.sh 
+
+conf.sh is used for dev/test, not for openshift. 
 
 - Establish network connection to the OpenLDAP container (NETWORKSETTINGS)
 - Adapt volume mapping (instance number)
 
-### etd.conf
- 
+### secrets/etd.conf
+
 - Adapt endpoints, credentials, DNs and other instance-specific settings
 - Note: Target-Id has a dual purpose: set the directory in path, and triggers the specif DN-Rules
-  for isntance #08
+  for instance #08
+
+### secrets/certificates.pem
+- TLS root certificates 
+
+## Operation
+
+  ./dscripts/build.sh
+  ./dscripts/run.sh -i  # interrupt when printinbg "finishing: sleeping"
+  ./dscripts/run.sh -i  bash  # resulting files are in  /opt/data/out/PH08/
+  
+
