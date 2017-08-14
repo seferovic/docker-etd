@@ -28,4 +28,9 @@ conf.sh is used for dev/test, not for openshift.
   ./dscripts/run.sh -i  # interrupt when printinbg "finishing: sleeping"
   ./dscripts/run.sh -i  bash  # resulting files are in  /opt/data/out/PH08/
   
+Currently only differences for entries existing in the source tree are reported. If there is no 
+source input, there is no output. Possible reasons: source tree is empty, or dn configuration is
+broken.
+
+  
 
