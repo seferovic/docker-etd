@@ -70,12 +70,8 @@ pipeline {
         stage('Test ETD') {
             steps {
                 sh '''
-                echo DATABASE_PASSWORDS=ph08:secret,postgres:secret > passwords
-                echo LDAP_PASSWORD=changeit >> passwords
-                '''
-                sh '''
-                # ETL container start (and loading initial data)
-                ./dscripts/run.sh -I /opt/bin/testdriver.py initial_load
+                # ETD container start (and loading initial data)
+                ./dscripts/run.sh -I
                 ./dscripts/run.sh -I /opt/bin/etl.py -c postgres          \
                     -d ou=user,ou=ph08,o=BMUKK initial_load
                 ./dscripts/run.sh /opt/bin/etl.py -c postgres             \
