@@ -8,7 +8,7 @@ import time
 #writes into
 #/opt/data/out/PH08/changes.txt
 cmd = '/opt/bin/etd.py'
-arg = ['-c', '/opt/etc/etd.conf', '-o', '/opt/data/out', '--write-sync-entries']
+arg = ['-c', '/opt/etc/etd.conf', '-l', '/opt/data/out/targetldap.log', '-o', '/opt/data/out', '--write-sync-entries']
 if os.environ.get ('DUMP_COMMAND', '') :
     cmds = os.environ ['DUMP_COMMAND'].split (' ')
     cmd  = cmds [0]
