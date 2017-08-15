@@ -33,7 +33,7 @@ RUN chmod a+x /opt/bin/*.py
 COPY secret/etd.conf /opt/etc/
 COPY secret/certificates.pem /opt/etc/
 
-VOLUME /opt/data/out/PH08
+VOLUME /opt/data
 VOLUME /opt/etc
 
  
